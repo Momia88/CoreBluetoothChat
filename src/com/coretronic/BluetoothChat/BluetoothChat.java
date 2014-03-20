@@ -25,19 +25,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+import com.coretronic.BluetoothChat.R;
 
 /**
  * This is the main Activity that displays the current chat session.
@@ -86,7 +78,7 @@ public class BluetoothChat extends Activity {
 			Log.e(TAG, "+++ ON CREATE +++");
 
 		// Set up the window layout
-		setContentView(com.example.android.BluetoothChat.R.layout.main);
+		setContentView(R.layout.main);
 
 		// Get local Bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -144,20 +136,20 @@ public class BluetoothChat extends Activity {
 
 		// Initialize the array adapter for the conversation thread
 		mConversationArrayAdapter = new ArrayAdapter<String>(this,
-				com.example.android.BluetoothChat.R.layout.message);
-		mConversationView = (ListView) findViewById(com.example.android.BluetoothChat.R.id.in);
+				R.layout.message);
+		mConversationView = (ListView) findViewById(R.id.in);
 		mConversationView.setAdapter(mConversationArrayAdapter);
 
 		// Initialize the compose field with a listener for the return key
-		mOutEditText = (EditText) findViewById(com.example.android.BluetoothChat.R.id.edit_text_out);
+		mOutEditText = (EditText) findViewById(R.id.edit_text_out);
 		mOutEditText.setOnEditorActionListener(mWriteListener);
 
 		// Initialize the send button with a listener that for click events
-		mSendButton = (Button) findViewById(com.example.android.BluetoothChat.R.id.button_send);
+		mSendButton = (Button) findViewById(R.id.button_send);
 		mSendButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Send a message using content of the edit text widget
-				TextView view = (TextView) findViewById(com.example.android.BluetoothChat.R.id.edit_text_out);
+				TextView view = (TextView) findViewById(R.id.edit_text_out);
 				String message = view.getText().toString();
 				sendMessage(message);
 			}
@@ -216,7 +208,7 @@ public class BluetoothChat extends Activity {
 	private void sendMessage(String message) {
 		// Check that we're actually connected before trying anything
 		if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-			Toast.makeText(this, com.example.android.BluetoothChat.R.string.not_connected, Toast.LENGTH_SHORT)
+			Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}
@@ -270,16 +262,16 @@ public class BluetoothChat extends Activity {
 					Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
 				switch (msg.arg1) {
 				case BluetoothChatService.STATE_CONNECTED:
-					setStatus(getString(com.example.android.BluetoothChat.R.string.title_connected_to,
+					setStatus(getString(R.string.title_connected_to,
 							mConnectedDeviceName));
 					mConversationArrayAdapter.clear();
 					break;
 				case BluetoothChatService.STATE_CONNECTING:
-					setStatus(com.example.android.BluetoothChat.R.string.title_connecting);
+					setStatus(R.string.title_connecting);
 					break;
 				case BluetoothChatService.STATE_LISTEN:
 				case BluetoothChatService.STATE_NONE:
-					setStatus(com.example.android.BluetoothChat.R.string.title_not_connected);
+					setStatus(R.string.title_not_connected);
 					break;
 				}
 				break;
@@ -336,7 +328,7 @@ public class BluetoothChat extends Activity {
 			} else {
 				// User did not enable Bluetooth or an error occurred
 				Log.d(TAG, "BT not enabled");
-				Toast.makeText(this, com.example.android.BluetoothChat.R.string.bt_not_enabled_leaving,
+				Toast.makeText(this, R.string.bt_not_enabled_leaving,
 						Toast.LENGTH_SHORT).show();
 				finish();
 			}
@@ -356,7 +348,7 @@ public class BluetoothChat extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(com.example.android.BluetoothChat.R.menu.option_menu, menu);
+		inflater.inflate(R.menu.option_menu, menu);
 		return true;
 	}
 
@@ -364,18 +356,18 @@ public class BluetoothChat extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent serverIntent = null;
 		switch (item.getItemId()) {
-		case com.example.android.BluetoothChat.R.id.secure_connect_scan:
+		case R.id.secure_connect_scan:
 			// Launch the DeviceListActivity to see devices and do scan
 			serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
 			return true;
-		case com.example.android.BluetoothChat.R.id.insecure_connect_scan:
+		case R.id.insecure_connect_scan:
 			// Launch the DeviceListActivity to see devices and do scan
 			serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent,
 					REQUEST_CONNECT_DEVICE_INSECURE);
 			return true;
-		case com.example.android.BluetoothChat.R.id.discoverable:
+		case R.id.discoverable:
 			// Ensure this device is discoverable by others
 			ensureDiscoverable();
 			return true;
